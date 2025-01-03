@@ -49,7 +49,7 @@ app.get('/api/images', async (req, res) => {
 
 // Serve the main page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(__dirname, 'Client', 'index.html'));
 });
 
 // Initialize images and start server-side slideshow
