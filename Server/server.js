@@ -28,7 +28,7 @@ const io = new Server(server, {
 
 const port = process.env.PORT || 3000;
 let currentImageIndex = 0;
-let images = [];
+let imageMetadata = []; // Store metadata separately from URLs
 
 // Serve static files from 'public' directory
 app.use(express.static('public'));
@@ -76,25 +76,60 @@ app.get('/', (req, res) => {
 
 // Initialize images and start server-side slideshow
 async function initializeSlideshow() {
-    images = await getImageList();
-    setInterval(() => {
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-        // Broadcast new image to all clients
-        io.emit('imageUpdate', {
-            url: images[currentImageIndex].url,
-            index: currentImageIndex
-        });
-    }, 3000);
+    // Load initial image metadata
+    const xmlData = await fs.readFile(path.join(__dirname, 'data', 'cdn-images.xml'), 'utf8');
+    const parser = new xml2js.Parser();
+    const result = await parser.parseStringPromise(xmlData);
+    
+    // Store metadata without URLs
+    imageMetadata = result.ListBucketResult.Contents
+        .filter(content => content.Key[0].startsWith('images/Quince/'))
+        .map(content => ({
+            key: content.Key[0],
+            date: new Date(content.LastModified[0]),
+            filename: content.Key[0]
+        }))
+        .sort((a, b) => a.date - b.date);
+
+    // Start slideshow if we have images
+    if (imageMetadata.length > 0) {
+        setInterval(() => {
+            currentImageIndex = (currentImageIndex + 1) % imageMetadata.length;
+            
+            // Generate fresh signed URL for current image
+            const params = {
+                Bucket: process.env.SPACES_BUCKET,
+                Key: imageMetadata[currentImageIndex].key,
+                Expires: 3600 // URL expires in 1 hour
+            };
+            const freshUrl = s3.getSignedUrl('getObject', params);
+
+            // Broadcast new image to all clients
+            io.emit('imageUpdate', {
+                url: freshUrl,
+                index: currentImageIndex,
+                filename: imageMetadata[currentImageIndex].filename
+            });
+        }, 3000);
+    }
 }
 
-// Socket.IO connection handling
+// Update socket connection handler to generate fresh URL for initial image
 io.on('connection', (socket) => {
     console.log('Client connected');
-    // Send current image to newly connected client
-    if (images.length > 0) {
+    // Send current image to newly connected client with fresh URL
+    if (imageMetadata.length > 0) {
+        const params = {
+            Bucket: process.env.SPACES_BUCKET,
+            Key: imageMetadata[currentImageIndex].key,
+            Expires: 3600
+        };
+        const freshUrl = s3.getSignedUrl('getObject', params);
+        
         socket.emit('imageUpdate', {
-            url: images[currentImageIndex].url,
-            index: currentImageIndex
+            url: freshUrl,
+            index: currentImageIndex,
+            filename: imageMetadata[currentImageIndex].filename
         });
     }
 });
