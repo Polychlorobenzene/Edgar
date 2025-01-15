@@ -26,14 +26,26 @@
       />
     </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript">
-      // Create Socket.IO connection
-      const socket = io();
+    <script>
+      // Create Socket.IO connection with options
+      const socket = io({
+        withCredentials: true,
+        transports: ['websocket', 'polling']
+      });
 
       // Listen for image updates from server
       socket.on("imageUpdate", (data) => {
         const img = document.getElementById("currentImage");
         img.src = data.url;
+      });
+
+      // Optional: Log connection status
+      socket.on('connect', () => {
+        console.log('Connected to server');
+      });
+
+      socket.on('connect_error', (error) => {
+        console.error('Connection error:', error);
       });
     </script>
   </body>
