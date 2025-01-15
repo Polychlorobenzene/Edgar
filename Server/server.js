@@ -4,7 +4,17 @@ const fs = require('fs').promises;
 const xml2js = require('xml2js');
 const { Server } = require('socket.io');
 const http = require('http');
+const AWS = require('aws-sdk');
 require('dotenv').config();
+
+// Configure AWS SDK for DO Spaces
+const spacesEndpoint = new AWS.Endpoint(process.env.SPACES_ENDPOINT);
+const s3 = new AWS.S3({
+    endpoint: spacesEndpoint,
+    accessKeyId: process.env.SPACES_KEY,
+    secretAccessKey: process.env.SPACES_SECRET,
+    region: process.env.SPACES_REGION
+});
 
 const app = express();
 const server = http.createServer(app);
@@ -29,14 +39,20 @@ async function getImageList() {
     const parser = new xml2js.Parser();
     const result = await parser.parseStringPromise(xmlData);
     
-    // Extract and sort images by date
     const images = result.ListBucketResult.Contents
         .filter(content => content.Key[0].startsWith('images/Quince/'))
-        .map(content => ({
-            url: `${process.env.CDN_URL}/${content.Key[0]}`,
-            date: new Date(content.LastModified[0]),
-            filename: content.Key[0]
-        }))
+        .map(content => {
+            const params = {
+                Bucket: process.env.SPACES_BUCKET,
+                Key: content.Key[0],
+                Expires: 3600 // URL expires in 1 hour
+            };
+            return {
+                url: s3.getSignedUrl('getObject', params),
+                date: new Date(content.LastModified[0]),
+                filename: content.Key[0]
+            };
+        })
         .sort((a, b) => a.date - b.date);
 
     return images;
