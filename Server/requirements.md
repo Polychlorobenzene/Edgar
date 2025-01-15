@@ -8,3 +8,18 @@ There will need to be an admin interface to add, edit, and remove images and tex
 ## Individual Requirements
 
 - [ ] Define the data model for the images and text including the uris of the images associated with the text, the text and which side of the image it is on, and the order of the images.
+
+
+Useful Commands:
+pm2:
+pm2 status          # Check application status
+pm2 logs            # View logs
+pm2 restart all     # Restart all applications
+pm2 stop all       # Stop all applications
+pm2 start server.js --name "server" --watch --cwd ./Server
+
+Common locations for Nginx files:
+Main config: /etc/nginx/nginx.conf
+Site configs: /etc/nginx/conf.d/*.conf
+Logs: /var/log/nginx/
+SSL certificates: /etc/letsencrypt/live/yourdomain.com/

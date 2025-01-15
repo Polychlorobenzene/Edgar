@@ -8,7 +8,13 @@ require('dotenv').config();
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: ["https://quince.nationofimagi.org", "http://localhost:3000"],
+        methods: ["GET", "POST"],
+        credentials: true
+    }
+});
 
 const port = process.env.PORT || 3000;
 let currentImageIndex = 0;
