@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quince Decay Time-lapse</title>
+      <link rel="stylesheet" href="/css/client.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Quince Decay Time-lapse</h1>
+      <div id="errorMessage" class="error-message"></div>
+      <div class="image-container">
+        <img
+          id="currentImage"
+          class="image-display"
+          alt="Quince decay time-lapse"
+        />
+      </div>
+    </div>
+    <div id="connectionStatus" class="connection-status"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
