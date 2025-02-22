@@ -28,11 +28,11 @@ body {
     height: 100%;
     object-fit: contain;
     opacity: 1;
-    transition: opacity 0.3s ease-in-out;
+    transition: opacity 1.3s ease-in-out;
   }
 
   .image-display.loading {
-    opacity: 0.95;
+    opacity: 0.25;
   }
 
   /* Error message styling */

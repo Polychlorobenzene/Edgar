@@ -110,7 +110,7 @@ async function initializeSlideshow() {
                 index: currentImageIndex,
                 filename: imageMetadata[currentImageIndex].filename
             });
-        }, 3000);
+        }, 6000);
     }
 }
 
