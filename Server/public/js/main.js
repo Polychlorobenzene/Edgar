@@ -1,5 +1,5 @@
- // Create Socket.IO connection with options
- const socket = io({
+// Create Socket.IO connection with options
+const socket = io({
     withCredentials: true,
     transports: ['websocket', 'polling'],
     reconnectionAttempts: 5,
@@ -82,7 +82,26 @@
   socket.on('imageUpdate', (data) => {
     hideError();
     handleImageLoad(data.url);
+    updateText(data.text);
   });
+
+  function updateText(textData) {
+    const textContainer = document.getElementById('textContent');
+    const container = document.querySelector('.image-text-container');
+    
+    if (textData) {
+        textContainer.textContent = textData.content;
+        textContainer.style.display = 'block';
+        // Handle text position
+        if (textData.position === 'left') {
+            textContainer.style.order = '1';
+        } else {
+            textContainer.style.order = '3';
+        }
+    } else {
+        textContainer.style.display = 'none';
+    }
+  }
 
   // Handle page visibility changes
   document.addEventListener('visibilitychange', () => {

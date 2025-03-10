@@ -1,0 +1,22 @@
+{
+  "textBlocks": [
+    {
+      "id": "text1",
+      "content": "The quince begins its journey fresh and vibrant.",
+      "position": "right",
+      "imageKeys": [
+        "images/Quince/QNC20230328_214500560.jpg",
+        "images/Quince/QNC20230329_214500560.jpg"
+      ]
+    },
+    {
+      "id": "text2",
+      "content": "Early signs of decay become visible.",
+      "position": "left",
+      "imageKeys": [
+        "images/Quince/QNC20230330_214500560.jpg",
+        "images/Quince/QNC20230331_214500560.jpg"
+      ]
+    }
+  ]
+} 

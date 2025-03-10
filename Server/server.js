@@ -6,6 +6,7 @@ const { Server } = require('socket.io');
 const http = require('http');
 const AWS = require('aws-sdk');
 require('dotenv').config();
+const imageTextBlocks = require('./data/image-text.json');
 
 // Configure AWS SDK for DO Spaces
 const spacesEndpoint = new AWS.Endpoint(process.env.SPACES_ENDPOINT);
@@ -84,11 +85,22 @@ async function initializeSlideshow() {
     // Store metadata without URLs
     imageMetadata = result.ListBucketResult.Contents
         .filter(content => content.Key[0].startsWith('images/Quince/'))
-        .map(content => ({
-            key: content.Key[0],
-            date: new Date(content.LastModified[0]),
-            filename: content.Key[0]
-        }))
+        .map(content => {
+            // Find associated text for this image
+            const associatedText = imageTextBlocks.textBlocks.find(text => 
+                text.imageKeys.includes(content.Key[0])
+            );
+            
+            return {
+                key: content.Key[0],
+                date: new Date(content.LastModified[0]),
+                filename: content.Key[0],
+                text: associatedText ? {
+                    content: associatedText.content,
+                    position: associatedText.position
+                } : null
+            };
+        })
         .sort((a, b) => a.date - b.date);
 
     // Start slideshow if we have images
@@ -108,7 +120,8 @@ async function initializeSlideshow() {
             io.emit('imageUpdate', {
                 url: freshUrl,
                 index: currentImageIndex,
-                filename: imageMetadata[currentImageIndex].filename
+                filename: imageMetadata[currentImageIndex].filename,
+                text: imageMetadata[currentImageIndex].text
             });
         }, 6000);
     }
@@ -129,7 +142,8 @@ io.on('connection', (socket) => {
         socket.emit('imageUpdate', {
             url: freshUrl,
             index: currentImageIndex,
-            filename: imageMetadata[currentImageIndex].filename
+            filename: imageMetadata[currentImageIndex].filename,
+            text: imageMetadata[currentImageIndex].text
         });
     }
 });
