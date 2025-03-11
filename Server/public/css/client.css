@@ -108,7 +108,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 0.3s ease-in-out;
+  transition: all var(--theme-transition-time);
 }
 
 .text-content:empty::before {
@@ -196,4 +196,31 @@ body {
               color var(--theme-transition-time),
               border-color var(--theme-transition-time),
               box-shadow var(--theme-transition-time);
+}
+
+.theme-selector {
+  position: fixed;
+  top: 1rem;
+  right: 8rem; /* Position to the left of connection status */
+  z-index: 100;
+}
+
+.theme-selector select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--text-secondary);
+  background: var(--background-primary);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all var(--theme-transition-time);
+}
+
+.theme-selector select:hover {
+  border-color: var(--text-primary);
+}
+
+/* Remove the old theme toggle button styles if any exist */
+.theme-toggle {
+  display: none;
 }

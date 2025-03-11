@@ -12,7 +12,7 @@ const socket = io({
   let reconnectAttempts = 0;
 
   // Theme switching functionality
-  const themeToggle = document.getElementById('themeToggle');
+  const themeSelect = document.getElementById('themeSelect');
   const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
   // Set initial theme based on user's system preference
@@ -20,27 +20,20 @@ const socket = io({
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         document.documentElement.setAttribute('data-theme', savedTheme);
-        updateThemeToggle(savedTheme);
+        themeSelect.value = savedTheme;
     } else if (prefersDarkScheme.matches) {
         document.documentElement.setAttribute('data-theme', 'dark');
-        updateThemeToggle('dark');
+        themeSelect.value = 'dark';
     }
   }
 
-  function updateThemeToggle(theme) {
-    themeToggle.textContent = theme === 'dark' ? '🌜' : '🌞';
-  }
-
-  function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    
+  function handleThemeChange(event) {
+    const newTheme = event.target.value;
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    updateThemeToggle(newTheme);
   }
 
-  themeToggle.addEventListener('click', toggleTheme);
+  themeSelect.addEventListener('change', handleThemeChange);
   prefersDarkScheme.addEventListener('change', initializeTheme);
 
   // Initialize theme on page load
