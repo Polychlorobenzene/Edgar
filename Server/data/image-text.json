@@ -1,6 +1,11 @@
 {
   "textBlocks": [
     {
+      "id": "default",
+      "content": "There are no words.",
+      "position": "left"
+    },
+    {
       "id": "text1",
       "content": "The quince begins its journey fresh and vibrant.",
       "position": "right",
