@@ -1,0 +1,21 @@
+/* Light Theme */
+:root[data-theme="light"] {
+  /* Text Colors */
+  --text-primary: var(--color-black);
+  --text-secondary: var(--color-gray-400);
+  --text-error: var(--color-red-800);
+  --text-success: var(--color-green-700);
+
+  /* Background Colors */
+  --background-primary: var(--color-white);
+  --background-secondary: var(--color-gray-50);
+  --background-error: var(--color-red-100);
+  --background-success: var(--color-green-50);
+  
+  /* Border Colors */
+  --border-error: var(--color-red-200);
+  
+  /* Surface & Effects */
+  --surface-overlay: rgba(255, 255, 255, 0.9);
+  --shadow-primary: rgba(0, 0, 0, 0.1);
+} 

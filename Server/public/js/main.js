@@ -11,6 +11,41 @@ const socket = io({
   const connectionStatus = document.getElementById('connectionStatus');
   let reconnectAttempts = 0;
 
+  // Theme switching functionality
+  const themeToggle = document.getElementById('themeToggle');
+  const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+  // Set initial theme based on user's system preference
+  function initializeTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeToggle(savedTheme);
+    } else if (prefersDarkScheme.matches) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        updateThemeToggle('dark');
+    }
+  }
+
+  function updateThemeToggle(theme) {
+    themeToggle.textContent = theme === 'dark' ? '🌜' : '🌞';
+  }
+
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeToggle(newTheme);
+  }
+
+  themeToggle.addEventListener('click', toggleTheme);
+  prefersDarkScheme.addEventListener('change', initializeTheme);
+
+  // Initialize theme on page load
+  initializeTheme();
+
   // Image loading handler
   function handleImageLoad(url) {
     img.classList.add('loading');
