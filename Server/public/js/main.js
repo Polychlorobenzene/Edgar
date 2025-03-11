@@ -119,7 +119,6 @@ const socket = io({
     
     if (textData) {
         textContainer.textContent = textData.content;
-        textContainer.style.display = 'block';
         // Handle text position
         if (textData.position === 'left') {
             textContainer.style.order = '1';
@@ -127,7 +126,7 @@ const socket = io({
             textContainer.style.order = '3';
         }
     } else {
-        textContainer.style.display = 'none';
+        textContainer.textContent = ''; // Just clear the content, let CSS :empty handle the display
     }
   }
 

@@ -101,6 +101,7 @@ body {
   flex: 1;
   max-width: 300px;
   min-height: 100px;
+  width: 20%;
   padding: 1rem;
   background: var(--surface-overlay);
   border-radius: 4px;
