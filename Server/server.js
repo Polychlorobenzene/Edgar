@@ -95,9 +95,9 @@ async function initializeSlideshow() {
   )
     .map((content) => {
       // Find associated text for this image
-      const associatedText = imageTextBlocks.textBlocks.find((text) =>
-        text.imageKeys.includes(content.Key[0]) ? text : text.id === "default"
-      );
+      const associatedText = imageTextBlocks.textBlocks.find(
+        (text) => text.imageKeys?.includes(content.Key[0])
+      ) || imageTextBlocks.textBlocks.find(text => text.id === "default");
 
       return {
         key: content.Key[0],
